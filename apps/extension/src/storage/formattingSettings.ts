@@ -8,6 +8,8 @@ import {
 export const FORMATTING_SETTINGS_STORAGE_KEY = 'wat.formatting-settings.v1';
 
 const FormattingSettingsSchema = z.object({
+  // Settings stored before the toggle existed default to raw transcripts.
+  enabled: z.boolean().default(false),
   tone: z.enum(['colloquial', 'natural', 'formal']),
   addParagraphs: z.boolean(),
   formatDates: z.boolean(),

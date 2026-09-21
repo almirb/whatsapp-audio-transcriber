@@ -58,8 +58,19 @@ describe('formatting settings', () => {
   });
 
   it('creates a stable cache key from all controls', () => {
-    expect(formattingSettingsKey(DEFAULT_FORMATTING_SETTINGS)).toBe(
-      'v3:natural:1111',
-    );
+    expect(
+      formattingSettingsKey({ ...DEFAULT_FORMATTING_SETTINGS, enabled: true }),
+    ).toBe('v4:natural:1111');
+  });
+
+  it('collapses the cache key when formatting is off', () => {
+    expect(formattingSettingsKey(DEFAULT_FORMATTING_SETTINGS)).toBe('v4:raw');
+    expect(
+      formattingSettingsKey({
+        ...DEFAULT_FORMATTING_SETTINGS,
+        tone: 'formal',
+        addParagraphs: false,
+      }),
+    ).toBe('v4:raw');
   });
 });

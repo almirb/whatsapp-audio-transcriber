@@ -1,6 +1,7 @@
 export type FormattingTone = 'colloquial' | 'natural' | 'formal';
 
 export type FormattingSettings = {
+  enabled: boolean;
   tone: FormattingTone;
   addParagraphs: boolean;
   formatDates: boolean;
@@ -9,6 +10,7 @@ export type FormattingSettings = {
 };
 
 export const DEFAULT_FORMATTING_SETTINGS: FormattingSettings = {
+  enabled: false,
   tone: 'natural',
   addParagraphs: true,
   formatDates: true,
@@ -130,6 +132,7 @@ export function postProcessFormattedText(text: string): string {
 }
 
 export function formattingSettingsKey(options: FormattingSettings): string {
+  if (!options.enabled) return 'v4:raw';
   const flags = [
     options.addParagraphs,
     options.formatDates,
@@ -138,5 +141,5 @@ export function formattingSettingsKey(options: FormattingSettings): string {
   ]
     .map((enabled) => (enabled ? '1' : '0'))
     .join('');
-  return `v3:${options.tone}:${flags}`;
+  return `v4:${options.tone}:${flags}`;
 }

@@ -48,8 +48,8 @@ export const TranscriptionResultSchema = z.strictObject({
   audioSha256: z.string().regex(/^[a-f0-9]{64}$/),
   transcriptionProvider: z.literal('groq'),
   transcriptionModel: z.literal(GROQ_TRANSCRIPTION_MODEL),
-  formattingProvider: z.literal('groq'),
-  formattingModel: z.literal(GROQ_FORMATTING_MODEL),
+  formattingProvider: z.literal('groq').nullable(),
+  formattingModel: z.literal(GROQ_FORMATTING_MODEL).nullable(),
   formattingSettingsKey: z.string().min(1).max(128),
 });
 

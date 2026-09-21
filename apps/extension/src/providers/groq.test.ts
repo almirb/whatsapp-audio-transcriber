@@ -3,6 +3,8 @@ import { GROQ_FORMATTING_MODEL, GROQ_TRANSCRIPTION_MODEL } from '@wat/protocol';
 import { DEFAULT_FORMATTING_SETTINGS } from '../formatting/settings';
 import { GroqProvider } from './groq';
 
+const FORMATTING_ON = { ...DEFAULT_FORMATTING_SETTINGS, enabled: true };
+
 describe('GroqProvider', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
@@ -34,7 +36,7 @@ describe('GroqProvider', () => {
 
     const result = await new GroqProvider(
       'gsk_valid_test_key_123456',
-      DEFAULT_FORMATTING_SETTINGS,
+      FORMATTING_ON,
       fetcher,
     ).transcribe(
       new Blob(['OggS-test'], { type: 'audio/ogg' }),
@@ -51,7 +53,7 @@ describe('GroqProvider', () => {
       durationMs: 2_400,
       transcriptionModel: GROQ_TRANSCRIPTION_MODEL,
       formattingModel: GROQ_FORMATTING_MODEL,
-      formattingSettingsKey: 'v3:natural:1111',
+      formattingSettingsKey: 'v4:natural:1111',
     });
     expect(fetcher).toHaveBeenCalledTimes(2);
     expect(fetcher.mock.calls[0]?.[0]).toContain('/audio/transcriptions');
@@ -76,6 +78,38 @@ describe('GroqProvider', () => {
     expect(messages[1]?.content).toBe(
       '<transcription>\noi tudo bem isso é um teste que eu gravei agora no WhatsApp\n</transcription>',
     );
+  });
+
+  it('skips the formatter when formatting is off', async () => {
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValueOnce(
+      jsonResponse({
+        text: 'oi tudo bem isso é um teste que eu gravei agora no WhatsApp',
+        language: 'pt',
+        duration: 2.4,
+      }),
+    );
+    const stages: string[] = [];
+
+    const result = await new GroqProvider(
+      'gsk_valid_test_key_123456',
+      DEFAULT_FORMATTING_SETTINGS,
+      fetcher,
+    ).transcribe(
+      new Blob(['OggS-test'], { type: 'audio/ogg' }),
+      null,
+      new AbortController().signal,
+      (stage) => stages.push(stage),
+    );
+
+    expect(stages).toEqual(['transcribing']);
+    expect(fetcher).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({
+      text: 'oi tudo bem isso é um teste que eu gravei agora no WhatsApp',
+      rawText: 'oi tudo bem isso é um teste que eu gravei agora no WhatsApp',
+      formattingProvider: null,
+      formattingModel: null,
+      formattingSettingsKey: 'v4:raw',
+    });
   });
 
   it('does not call the formatter below 40 characters', async () => {

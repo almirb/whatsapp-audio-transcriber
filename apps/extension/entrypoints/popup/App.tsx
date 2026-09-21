@@ -262,6 +262,23 @@ export function App() {
       >
         <div className="formatting-heading">
           <h2 id="formatting-title">Formatação</h2>
+          <button
+            type="button"
+            role="switch"
+            className="heading-switch"
+            aria-checked={formatting.enabled}
+            aria-labelledby="formatting-title"
+            title={
+              formatting.enabled
+                ? 'Desligar a formatação'
+                : 'Ligar a formatação'
+            }
+            onClick={() => updateFormatting({ enabled: !formatting.enabled })}
+          >
+            <span className="toggle-track" aria-hidden="true">
+              <span />
+            </span>
+          </button>
         </div>
 
         {!formattingLoaded ? (
@@ -270,6 +287,11 @@ export function App() {
             <span />
             <span />
           </div>
+        ) : !formatting.enabled ? (
+          <p className="formatting-off">
+            As transcrições saem como o Whisper as devolve, sem passar pelo
+            modelo de formatação.
+          </p>
         ) : (
           <>
             <div className="tone-block">

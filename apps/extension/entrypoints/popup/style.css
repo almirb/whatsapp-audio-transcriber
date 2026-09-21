@@ -285,7 +285,28 @@ h1 {
 }
 
 .formatting-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
   padding: 13px 13px 11px;
+}
+
+.heading-switch {
+  display: grid;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  place-items: center;
+}
+
+.formatting-off {
+  margin: 0;
+  padding: 0 13px 13px;
+  color: var(--muted, #5b6b65);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .formatting-heading h2 {
@@ -434,11 +455,11 @@ h1 {
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.formatting-option[aria-checked='true'] .toggle-track {
+[aria-checked='true'] .toggle-track {
   background: var(--green);
 }
 
-.formatting-option[aria-checked='true'] .toggle-track span {
+[aria-checked='true'] .toggle-track span {
   transform: translateX(13px);
 }
 

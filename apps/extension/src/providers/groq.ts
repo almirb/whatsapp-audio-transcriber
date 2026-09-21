@@ -118,7 +118,9 @@ export class GroqProvider implements TranscriptionProvider {
     }
 
     let text = rawText;
-    if (rawText.length >= MIN_FORMATTING_CHARS) {
+    const formatted =
+      this.formattingSettings.enabled && rawText.length >= MIN_FORMATTING_CHARS;
+    if (formatted) {
       onProgress('formatting');
       text = await this.formatTranscription(rawText, signal);
     }
@@ -131,8 +133,8 @@ export class GroqProvider implements TranscriptionProvider {
       audioSha256,
       transcriptionProvider: 'groq',
       transcriptionModel: GROQ_TRANSCRIPTION_MODEL,
-      formattingProvider: 'groq',
-      formattingModel: GROQ_FORMATTING_MODEL,
+      formattingProvider: formatted ? 'groq' : null,
+      formattingModel: formatted ? GROQ_FORMATTING_MODEL : null,
       formattingSettingsKey: formattingSettingsKey(this.formattingSettings),
     };
   }
