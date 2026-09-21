@@ -2,7 +2,13 @@
 
 As mudanças relevantes deste projeto serão documentadas neste arquivo. O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## Não publicado
+## 0.2.4 - 2026-09-21
+
+### Alterado
+
+- tipografia do painel de transcrição: corpo menor, entrelinha ajustada e parágrafos com espaçamento próprio;
+- largura do painel limitada à metade da faixa de mensagens, com a bolha do áudio como piso;
+- transcrição exibida por inteiro, sem altura fixa nem barra de rolagem.
 
 ### Adicionado
 
@@ -14,6 +20,7 @@ As mudanças relevantes deste projeto serão documentadas neste arquivo. O forma
 
 ### Corrigido
 
+- resposta do service worker às mensagens do popup, que impedia a verificação da conexão com a Groq e o salvamento da API key;
 - cancelamento imediato durante a captura e a montagem do áudio;
 - validação do arquivo capturado e isolamento do canal acionado pela página;
 - timeout, ownership e limpeza dos trabalhos ainda incompletos;
