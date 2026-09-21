@@ -1,6 +1,10 @@
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-type Listener = (value: unknown, sender?: unknown) => unknown;
+type Listener = (
+  value: unknown,
+  sender?: unknown,
+  sendResponse?: (response?: unknown) => void,
+) => unknown;
 
 const runtimeHarness = vi.hoisted(() => {
   const connectListeners: Array<(port: unknown) => void> = [];
@@ -108,7 +112,7 @@ describe('background job assembly', () => {
   });
 
   it('ignores popup commands sent from a content-script context', async () => {
-    const response = runtimeHarness.messageListeners[0]?.(
+    const { keptChannelOpen, response } = dispatchRuntimeMessage(
       { type: 'wat.groq.remove-key' },
       {
         id: 'test-extension',
@@ -116,11 +120,12 @@ describe('background job assembly', () => {
       },
     );
 
+    expect(keptChannelOpen).toBe(true);
     await expect(response).resolves.toBeUndefined();
   });
 
   it('opens the configuration popup only for the WhatsApp content script', async () => {
-    const response = runtimeHarness.messageListeners[0]?.(
+    const { response } = dispatchRuntimeMessage(
       { type: 'wat.open-popup' },
       {
         id: 'test-extension',
@@ -131,20 +136,20 @@ describe('background job assembly', () => {
     await expect(response).resolves.toEqual({ opened: true });
     expect(runtimeHarness.openPopup).toHaveBeenCalledOnce();
 
-    const rejected = runtimeHarness.messageListeners[0]?.(
+    const rejected = dispatchRuntimeMessage(
       { type: 'wat.open-popup' },
       {
         id: 'test-extension',
         url: 'https://example.com/',
       },
     );
-    await expect(rejected).resolves.toBeUndefined();
+    await expect(rejected.response).resolves.toBeUndefined();
   });
 
   it('falls back to a tab when Chrome cannot open the action popup', async () => {
     runtimeHarness.openPopup.mockRejectedValueOnce(new Error('unavailable'));
 
-    const response = runtimeHarness.messageListeners[0]?.(
+    const { response } = dispatchRuntimeMessage(
       { type: 'wat.open-popup' },
       {
         id: 'test-extension',
@@ -175,4 +180,17 @@ function createPort() {
       for (const listener of messageListeners) listener(value);
     },
   };
+}
+
+function dispatchRuntimeMessage(message: unknown, sender: unknown) {
+  let deliver: (response: unknown) => void = () => {};
+  const response = new Promise<unknown>((resolve) => {
+    deliver = resolve;
+  });
+  const keptChannelOpen = runtimeHarness.messageListeners[0]?.(
+    message,
+    sender,
+    (value?: unknown) => deliver(value),
+  );
+  return { keptChannelOpen, response };
 }
