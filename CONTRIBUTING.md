@@ -59,6 +59,12 @@ pnpm build
 
 Para alterações nos seletores do WhatsApp, inclua fixtures anonimizadas e testes para mensagens enviadas e recebidas. Prefira atributos estruturais estáveis a classes CSS geradas ou textos localizados.
 
+## Mensagens de commit
+
+As mensagens de commit e de merge deste repositório são escritas em inglês, no formato [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/): `type(scope): description`. Os tipos aceitos são `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build` e `revert`.
+
+O corpo do commit, quando houver, explica o motivo da mudança e também fica em inglês. A documentação do projeto e a interface da extensão permanecem em português.
+
 ## Pull requests
 
 Um pull request deve:
