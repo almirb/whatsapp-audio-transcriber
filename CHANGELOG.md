@@ -2,6 +2,20 @@
 
 As mudanças relevantes deste projeto serão documentadas neste arquivo. O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## 0.2.5 - 2026-09-21
+
+### Adicionado
+
+- rótulo no gatilho da transcrição, "Transcrever" antes e "Transcrição" depois, ampliando a área clicável para além do ícone;
+- opção de exibição que abre as transcrições já salvas assim que a mensagem de voz aparece, desligada por padrão;
+- interruptor ao lado do título "Formatação", no popup, que liga e desliga a etapa do modelo de formatação.
+
+### Alterado
+
+- a formatação passa a vir desligada: por padrão a transcrição sai como o Whisper a devolve, sem requisição ao GPT-OSS. Ligue o interruptor em "Formatação" para retomar o comportamento anterior;
+- o gatilho deixou de ter tamanho fixo: a posição acompanha a largura medida do botão e fica centrada na linha de duração do áudio;
+- a chave do cache de transcrições subiu para v4. As transcrições guardadas pela versão anterior deixam de ser reaproveitadas e o áudio é transcrito novamente no primeiro acesso.
+
 ## 0.2.4 - 2026-09-21
 
 ### Alterado
