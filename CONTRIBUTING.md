@@ -65,6 +65,14 @@ As mensagens de commit e de merge deste repositório são escritas em inglês, n
 
 O corpo do commit, quando houver, explica o motivo da mudança e também fica em inglês. A documentação do projeto e a interface da extensão permanecem em português.
 
+## Integração das branches
+
+O histórico de `main` é linear. Antes de integrar, rebase a branch sobre `main` e use `git merge --ff-only`; no GitHub, prefira "Rebase and merge" ou "Squash and merge".
+
+Reserve `git merge --no-ff` para as branches que agrupam várias etapas e valem ser lidas ou revertidas em conjunto — o caso típico é uma release. Uma branch de commit único nunca precisa de commit de merge.
+
+Apague a branch depois que ela entrar em `main`.
+
 ## Pull requests
 
 Um pull request deve:

@@ -5,6 +5,7 @@
 - Mensagens de commit e de merge em inglês, sempre, no formato Conventional Commits (`type(scope): description`). Tipos aceitos: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`, `ci`, `build`, `revert`.
 - O corpo do commit também fica em inglês e explica o motivo da mudança.
 - Mensagens de merge seguem o padrão `merge: <assunto> (<branch>)`.
+- Histórico de `main` linear: rebase a branch e integre com `git merge --ff-only`. `--no-ff` apenas para branches com várias etapas que valem agrupamento, como uma release. Apague a branch depois de integrá-la.
 
 ## Idioma do restante
 
