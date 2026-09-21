@@ -13,7 +13,7 @@ describe('WhatsApp transcript widget geometry', () => {
     ).toEqual({
       triggerLeft: 148,
       triggerTop: 47,
-      panelWidth: 574,
+      panelWidth: 336,
       bubbleWidth: 336,
     });
   });
@@ -28,24 +28,24 @@ describe('WhatsApp transcript widget geometry', () => {
 
     expect(geometry.triggerLeft).toBe(35);
     expect(geometry.triggerTop).toBe(20);
-    expect(geometry.panelWidth).toBe(288);
+    expect(geometry.panelWidth).toBe(144);
   });
 
-  it('fills the WhatsApp message lane for outgoing transcripts', () => {
+  it('spans half of the WhatsApp message lane', () => {
     const geometry = calculateWidgetGeometry(
       { left: 960, top: 50, width: 320, height: 64 },
-      574,
+      1200,
       { right: 1100, top: 92 },
     );
 
-    expect(geometry.panelWidth).toBe(574);
+    expect(geometry.panelWidth).toBe(600);
     expect(geometry.bubbleWidth).toBe(320);
   });
 
   it('caps transcript width on large screens', () => {
     const geometry = calculateWidgetGeometry(
       { left: 40, top: 50, width: 320, height: 64 },
-      1600,
+      2400,
       { right: 180, top: 92 },
     );
 

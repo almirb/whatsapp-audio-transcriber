@@ -335,11 +335,18 @@ button {
 }
 
 .transcript {
-  max-height: 220px;
-  overflow: auto;
   color: var(--message-primary, #111b21);
+  font-size: 12.5px;
+  line-height: 1.43;
   white-space: pre-wrap;
-  scrollbar-width: thin;
+}
+
+.transcript p {
+  margin: 0;
+}
+
+.transcript p + p {
+  margin-top: 0.86em;
 }
 
 .transcript-foot {

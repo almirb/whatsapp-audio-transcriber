@@ -602,7 +602,11 @@ export function TranscriptWidget({
                         <X {...iconProps} />
                       </button>
                     </div>
-                    <p className="transcript">{record.text}</p>
+                    <div className="transcript">
+                      {splitParagraphs(record.text).map((paragraph, index) => (
+                        <p key={index}>{paragraph}</p>
+                      ))}
+                    </div>
                     {cacheWarning && (
                       <p className="cache-warning">{cacheWarning}</p>
                     )}
@@ -660,6 +664,10 @@ function resolvePanelView(
   if (phase === 'error') return 'error';
   if (phase === 'success' && record && expanded) return 'transcript';
   return null;
+}
+
+function splitParagraphs(text: string): string[] {
+  return text.split(/\n{2,}/).filter((paragraph) => paragraph.trim().length);
 }
 
 function statusLabel(phase: Phase, stage: ProgressStage) {

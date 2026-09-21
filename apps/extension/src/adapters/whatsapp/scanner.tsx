@@ -264,7 +264,7 @@ export function calculateWidgetGeometry(
     ),
     panelWidth: Math.max(
       bubble.width,
-      Math.min(PANEL_MAX_WIDTH, panelContentWidth),
+      Math.min(PANEL_MAX_WIDTH, panelContentWidth / 2),
     ),
     bubbleWidth: bubble.width,
   };
