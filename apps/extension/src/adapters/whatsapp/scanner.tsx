@@ -7,7 +7,7 @@ import {
 } from './voiceMessages';
 import styles from '../../../entrypoints/whatsapp.content/style.css?inline';
 
-const TRIGGER_SIZE = 18;
+const FALLBACK_TRIGGER = { width: 18, height: 18 };
 const PANEL_MAX_WIDTH = 920;
 // WhatsApp paints the audio content at z-index 200.
 const TRIGGER_Z_INDEX = 201;
@@ -58,9 +58,8 @@ export function startVoiceMessageScanner(): () => void {
       if (message.outgoing) bubbleHost.dataset.watOutgoing = '1';
       Object.assign(bubbleHost.style, {
         position: 'absolute',
-        width: `${TRIGGER_SIZE}px`,
-        height: `${TRIGGER_SIZE}px`,
         pointerEvents: 'none',
+        whiteSpace: 'nowrap',
         zIndex: String(TRIGGER_Z_INDEX),
         boxSizing: 'border-box',
       });
@@ -205,12 +204,15 @@ function bindWidgetGeometry(
     const anchor = durationRect ?? {
       right: sliderRect.left + 24,
       top: sliderRect.bottom + 1,
+      bottom: sliderRect.bottom + 15,
     };
+    const triggerRect = bubbleHost.getBoundingClientRect();
     const geometry = calculateWidgetGeometry(
       bubbleRect,
       getContentWidth(panelContainer),
       anchor,
       metaRect,
+      triggerRect.width ? triggerRect : undefined,
     );
 
     bubbleHost.style.left = `${geometry.triggerLeft}px`;
@@ -225,6 +227,8 @@ function bindWidgetGeometry(
   const observer = new ResizeObserver(sync);
   observer.observe(panelContainer);
   observer.observe(message.bubble);
+  // The trigger label changes width once a transcript exists.
+  observer.observe(bubbleHost);
   observer.observe(message.slider);
   if (message.durationElement) observer.observe(message.durationElement);
   window.addEventListener('resize', sync);
@@ -242,14 +246,15 @@ function bindWidgetGeometry(
 export function calculateWidgetGeometry(
   bubble: Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>,
   panelContentWidth: number,
-  anchor: Pick<DOMRect, 'right' | 'top'>,
+  anchor: Pick<DOMRect, 'right' | 'top' | 'bottom'>,
   meta?: Pick<DOMRect, 'left'>,
+  trigger: Pick<DOMRect, 'width' | 'height'> = FALLBACK_TRIGGER,
 ) {
   const edge = 4;
   const gap = 5;
-  const maxFromBubble = bubble.width - TRIGGER_SIZE - edge;
+  const maxFromBubble = bubble.width - trigger.width - edge;
   const maxFromMeta = meta
-    ? meta.left - bubble.left - TRIGGER_SIZE - gap
+    ? meta.left - bubble.left - trigger.width - gap
     : maxFromBubble;
   const maxLeft = Math.max(edge, Math.min(maxFromBubble, maxFromMeta));
 
@@ -260,7 +265,10 @@ export function calculateWidgetGeometry(
     ),
     triggerTop: Math.max(
       2,
-      Math.min(anchor.top - bubble.top - 2, bubble.height - TRIGGER_SIZE - 2),
+      Math.min(
+        (anchor.top + anchor.bottom) / 2 - trigger.height / 2 - bubble.top,
+        bubble.height - trigger.height - edge - 2,
+      ),
     ),
     panelWidth: Math.max(
       bubble.width,

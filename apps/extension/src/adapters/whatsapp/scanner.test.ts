@@ -7,12 +7,12 @@ describe('WhatsApp transcript widget geometry', () => {
       calculateWidgetGeometry(
         { left: 876, top: 534, width: 336, height: 67 },
         574,
-        { right: 1019, top: 583 },
+        { right: 1019, top: 583, bottom: 597 },
         { left: 1141 },
       ),
     ).toEqual({
       triggerLeft: 148,
-      triggerTop: 47,
+      triggerTop: 43,
       panelWidth: 336,
       bubbleWidth: 336,
     });
@@ -22,12 +22,12 @@ describe('WhatsApp transcript widget geometry', () => {
     const geometry = calculateWidgetGeometry(
       { left: 20, top: 50, width: 90, height: 40 },
       288,
-      { right: 95, top: 82 },
+      { right: 95, top: 82, bottom: 96 },
       { left: 78 },
     );
 
     expect(geometry.triggerLeft).toBe(35);
-    expect(geometry.triggerTop).toBe(20);
+    expect(geometry.triggerTop).toBe(16);
     expect(geometry.panelWidth).toBe(144);
   });
 
@@ -35,18 +35,31 @@ describe('WhatsApp transcript widget geometry', () => {
     const geometry = calculateWidgetGeometry(
       { left: 960, top: 50, width: 320, height: 64 },
       1200,
-      { right: 1100, top: 92 },
+      { right: 1100, top: 92, bottom: 106 },
     );
 
     expect(geometry.panelWidth).toBe(600);
     expect(geometry.bubbleWidth).toBe(320);
   });
 
+  it('keeps a labelled trigger clear of the message metadata', () => {
+    const geometry = calculateWidgetGeometry(
+      { left: 876, top: 534, width: 336, height: 67 },
+      574,
+      { right: 1019, top: 583, bottom: 597 },
+      { left: 1141 },
+      { width: 110, height: 22 },
+    );
+
+    expect(geometry.triggerLeft).toBe(148);
+    expect(geometry.triggerTop).toBe(39);
+  });
+
   it('caps transcript width on large screens', () => {
     const geometry = calculateWidgetGeometry(
       { left: 40, top: 50, width: 320, height: 64 },
       2400,
-      { right: 180, top: 92 },
+      { right: 180, top: 92, bottom: 106 },
     );
 
     expect(geometry.panelWidth).toBe(920);

@@ -427,21 +427,21 @@ export function TranscriptWidget({
     <>
       {showTrigger && (
         <button
-          className={`trigger icon-only${phase === 'success' ? ' ready' : ''}`}
+          className={`trigger compact${phase === 'success' ? ' ready' : ''}`}
           type="button"
           onClick={(event) => {
             if (!isTrustedUserAction(event)) return;
             if (phase === 'idle') void requestTranscription();
             else setExpanded(true);
           }}
-          aria-label={phase === 'idle' ? 'Transcrever' : 'Ver transcrição'}
-          title={phase === 'idle' ? 'Transcrever' : 'Ver transcrição'}
+          title={phase === 'idle' ? 'Transcrever' : 'Transcrição'}
         >
           {phase === 'idle' ? (
             <BotMessageSquare {...triggerIconProps} />
           ) : (
             <AlignLeft {...triggerIconProps} />
           )}
+          {phase === 'idle' ? 'Transcrever' : 'Transcrição'}
         </button>
       )}
 

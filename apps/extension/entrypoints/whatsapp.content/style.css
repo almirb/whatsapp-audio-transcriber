@@ -53,51 +53,35 @@ button {
     opacity 140ms ease;
 }
 
-.trigger.icon-only {
-  width: 18px;
-  height: 18px;
-  min-height: 18px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  opacity: 0.62;
-  pointer-events: auto;
-  transform: scale(1);
-  transition:
-    color 120ms ease,
-    opacity 120ms ease,
-    transform 120ms ease;
+.trigger.compact {
+  gap: 4px;
+  min-height: 20px;
+  padding: 1px 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  opacity: 0.72;
 }
 
-:host([data-wat-hover]) .trigger.icon-only,
-:host .trigger.icon-only:focus-visible {
-  opacity: 1;
-  pointer-events: auto;
-  transform: scale(1);
-}
-
-.trigger.icon-only.ready {
-  opacity: 0.78;
-  pointer-events: auto;
+.trigger.compact.ready {
+  border-color: color-mix(in srgb, var(--wat-green) 32%, transparent);
   color: var(--wat-green-strong);
-  transform: scale(1);
+  opacity: 0.85;
 }
 
-:host([data-wat-hover]) .trigger.icon-only.ready,
-:host .trigger.icon-only.ready:focus-visible {
+:host([data-wat-hover]) .trigger.compact,
+:host .trigger.compact:focus-visible {
   opacity: 1;
 }
 
 @media (hover: none) {
-  .trigger.icon-only {
-    opacity: 0.92;
-    pointer-events: auto;
+  .trigger.compact {
+    opacity: 0.95;
   }
 }
 
 .trigger:hover {
-  background: transparent;
+  border-color: color-mix(in srgb, var(--wat-green) 40%, transparent);
+  background: color-mix(in srgb, var(--wat-green) 12%, transparent);
   color: var(--wat-green-strong);
 }
 
