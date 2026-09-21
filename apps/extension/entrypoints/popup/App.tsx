@@ -23,6 +23,12 @@ import {
   clearTranscriptCache,
 } from '../../src/storage/transcripts';
 import {
+  DEFAULT_DISPLAY_SETTINGS,
+  getDisplaySettings,
+  saveDisplaySettings,
+  type DisplaySettings,
+} from '../../src/storage/displaySettings';
+import {
   getFormattingSettings,
   saveFormattingSettings,
 } from '../../src/storage/formattingSettings';
@@ -52,6 +58,9 @@ export function App() {
     DEFAULT_FORMATTING_SETTINGS,
   );
   const [formattingLoaded, setFormattingLoaded] = useState(false);
+  const [display, setDisplay] = useState<DisplaySettings>(
+    DEFAULT_DISPLAY_SETTINGS,
+  );
   const [operationError, setOperationError] = useState('');
 
   const applyStatus = (status: GroqStatus) => {
@@ -70,13 +79,14 @@ export function App() {
   const refresh = useCallback(async () => {
     setHealth('checking');
     setOperationError('');
-    const [statusResult, statsResult, formattingResult] =
+    const [statusResult, statsResult, formattingResult, displayResult] =
       await Promise.allSettled([
         browser.runtime.sendMessage<{ type: 'wat.groq.status' }, GroqStatus>({
           type: 'wat.groq.status',
         }),
         cacheStats(),
         getFormattingSettings(),
+        getDisplaySettings(),
       ]);
     if (statsResult.status === 'fulfilled') {
       setCount(statsResult.value.count);
@@ -84,6 +94,9 @@ export function App() {
     }
     if (formattingResult.status === 'fulfilled') {
       setFormatting(formattingResult.value);
+    }
+    if (displayResult.status === 'fulfilled') {
+      setDisplay(displayResult.value);
     }
     setFormattingLoaded(true);
     if (statusResult.status === 'fulfilled') {
@@ -155,6 +168,17 @@ export function App() {
     } catch {
       setOperationError('Não foi possível limpar as transcrições salvas.');
     }
+  };
+
+  const updateDisplay = (change: Partial<DisplaySettings>) => {
+    const previous = display;
+    const next = { ...display, ...change };
+    setDisplay(next);
+    setOperationError('');
+    void saveDisplaySettings(next).catch(() => {
+      setDisplay(previous);
+      setOperationError('Não foi possível salvar as opções de exibição.');
+    });
   };
 
   const updateFormatting = (change: Partial<FormattingSettings>) => {
@@ -301,6 +325,26 @@ export function App() {
             </div>
           </>
         )}
+      </section>
+
+      <section
+        className="formatting-card reveal"
+        aria-labelledby="display-title"
+        style={{ '--d': '180ms' } as React.CSSProperties}
+      >
+        <div className="formatting-heading">
+          <h2 id="display-title">Exibição</h2>
+        </div>
+        <div className="formatting-options">
+          <FormattingToggle
+            label="Abrir transcrições"
+            detail="Mostra as já transcritas sem precisar clicar"
+            checked={display.autoExpandTranscripts}
+            onChange={(autoExpandTranscripts) =>
+              updateDisplay({ autoExpandTranscripts })
+            }
+          />
+        </div>
       </section>
 
       <section

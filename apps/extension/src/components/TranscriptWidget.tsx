@@ -28,6 +28,10 @@ import { browser } from 'wxt/browser';
 import type { VoiceMessageDescriptor } from '../adapters/whatsapp/voiceMessages';
 import { captureVoiceAudio } from '../messaging/pageBridge';
 import { transcriptionClient } from '../messaging/transcriptionClient';
+import {
+  DISPLAY_SETTINGS_STORAGE_KEY,
+  getDisplaySettings,
+} from '../storage/displaySettings';
 import { FORMATTING_SETTINGS_STORAGE_KEY } from '../storage/formattingSettings';
 import {
   getGroqSettings,
@@ -260,10 +264,14 @@ export function TranscriptWidget({
   useEffect(() => {
     let active = true;
     void hashMessageKey(message.id).then(async (hash) => {
-      const cached = await getTranscript(hash);
+      const [cached, display] = await Promise.all([
+        getTranscript(hash),
+        getDisplaySettings(),
+      ]);
       if (!active) return;
       setMessageHash(hash);
       setRecord(cached);
+      setExpanded(Boolean(cached) && display.autoExpandTranscripts);
       setPhase(cached ? 'success' : 'idle');
     });
     return () => {
@@ -284,6 +292,11 @@ export function TranscriptWidget({
       if (areaName !== 'local' || jobRef.current) return;
       if (GROQ_SETTINGS_STORAGE_KEY in changes) {
         setPhase((current) => (current === 'setup' ? 'idle' : current));
+      }
+      if (DISPLAY_SETTINGS_STORAGE_KEY in changes) {
+        void getDisplaySettings().then((display) => {
+          setExpanded(display.autoExpandTranscripts);
+        });
       }
       if (!(FORMATTING_SETTINGS_STORAGE_KEY in changes)) return;
       setRecord(null);
