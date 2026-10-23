@@ -20,7 +20,7 @@ export function findVoiceMessages(
     );
     const slider = row.querySelector<HTMLElement>('[role="slider"]');
     if (!messageRoot?.dataset.id || !bubble || !slider) continue;
-    if (!row.querySelector('[data-icon="ptt-status"]')) continue;
+    if (!hasVoiceIcon(row)) continue;
 
     const transportButton = findTransportButton(bubble, slider);
     if (!transportButton) continue;
@@ -37,6 +37,15 @@ export function findVoiceMessages(
   }
 
   return messages;
+}
+
+// O WhatsApp marcava o ícone com data-icon="ptt-status"; desde out/2026 o
+// ícone é um SVG identificado apenas pelo <title>.
+function hasVoiceIcon(row: HTMLElement): boolean {
+  if (row.querySelector('[data-icon="ptt-status"]')) return true;
+  return [...row.querySelectorAll('svg title')].some((title) =>
+    /keyboard-voice/u.test(title.textContent ?? ''),
+  );
 }
 
 function findDurationElement(bubble: HTMLElement): HTMLElement | null {

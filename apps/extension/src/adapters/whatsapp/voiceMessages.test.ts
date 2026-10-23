@@ -104,6 +104,39 @@ describe('WhatsApp voice message adapter', () => {
     expect(message?.durationElement?.dataset.duration).toBe('');
   });
 
+  it('recognises the voice icon rendered as an SVG title', () => {
+    document.body.innerHTML = `
+      <div role="row">
+        <div data-id="message-svg">
+          <div data-testid="msg-container">
+            <button aria-label="Reproduzir mensagem de voz"></button>
+            <div role="slider"></div>
+            <svg><title>ic-keyboard-voice-filled</title></svg>
+          </div>
+        </div>
+      </div>
+    `;
+
+    expect(findVoiceMessages().map((message) => message.id)).toEqual([
+      'message-svg',
+    ]);
+  });
+
+  it('ignores audio sliders without the voice icon', () => {
+    document.body.innerHTML = `
+      <div role="row">
+        <div data-id="audio-file">
+          <div data-testid="msg-container">
+            <button aria-label="Reproduzir áudio"></button>
+            <div role="slider"></div>
+            <svg><title>ic-headphones</title></svg>
+          </div>
+        </div>
+      </div>
+    `;
+    expect(findVoiceMessages()).toEqual([]);
+  });
+
   it('ignores ordinary messages', () => {
     document.body.innerHTML = `
       <div role="row">
