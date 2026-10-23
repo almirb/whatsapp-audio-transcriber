@@ -1,10 +1,10 @@
-# WhatsApp Transcritor v0.2.5
+# WhatsApp Transcritor v0.2.6
 
 O mesmo pacote funciona no Google Chrome para macOS e Windows.
 
 ## Instalação
 
-1. Copie `WhatsApp-Transcritor-v0.2.5.zip` para o computador.
+1. Copie `WhatsApp-Transcritor-v0.2.6.zip` para o computador.
 2. Descompacte o arquivo em uma pasta permanente, como `Documentos/WhatsApp-Transcritor`.
 3. Abra `chrome://extensions` no Google Chrome.
 4. Ative o **Modo do desenvolvedor**.
@@ -26,5 +26,5 @@ Não remova a extensão antes de atualizar. A API key e as transcrições ficam 
 SHA-256:
 
 ```text
-e906a163ce6c1c3f44767565ad90c03ed31138108558becc70d0c8c4d08354ba
+faf6b4a12228f31c13ae182eadc82d23539edbfba6517c28a4d39f440bcbdb5e
 ```

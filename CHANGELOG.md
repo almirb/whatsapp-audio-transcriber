@@ -2,6 +2,12 @@
 
 As mudanças relevantes deste projeto serão documentadas neste arquivo. O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e o versionamento segue o [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## 0.2.6 - 2026-10-23
+
+### Corrigido
+
+- o gatilho da transcrição voltou a aparecer nas mensagens de voz. O WhatsApp Web deixou de marcar o ícone de microfone com `data-icon="ptt-status"` e passou a identificá-lo apenas pelo título do SVG; a extensão reconhece os dois formatos.
+
 ## 0.2.5 - 2026-09-21
 
 ### Adicionado
