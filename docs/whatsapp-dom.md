@@ -7,7 +7,7 @@ Observação realizada no WhatsApp Web atual com mensagens de voz enviadas e rec
 - contêiner virtualizado `div[role="row"]`
 - identificador da mensagem em `[data-id]`
 - bolha em `[data-testid="msg-container"]`
-- marcador de voz `[data-icon="ptt-status"]`
+- marcador de voz: SVG com `<title>` contendo `keyboard-voice` (atualmente `ic-keyboard-voice-filled`); até setembro de 2026 era `[data-icon="ptt-status"]`, ainda aceito
 - progresso em `[role="slider"]`
 - botão de transporte localizado estruturalmente antes do slider
 
